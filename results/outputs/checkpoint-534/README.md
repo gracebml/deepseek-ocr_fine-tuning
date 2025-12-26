@@ -210,7 +210,7 @@ Total training samples: ~10,000+ images from multiple writers
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
 
 - **Hardware Type:** Tesla T4 GPU (x2)
-- **Hours used:** ~0.5 hours
+- **Hours used:** ~4.5 hours
 - **Cloud Provider:** Kaggle
 - **Compute Region:** Unknown
 - **Carbon Emitted:** Minimal (short training time)
