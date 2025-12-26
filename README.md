@@ -112,7 +112,6 @@ Sử dụng notebook `kaggle_notebook/deepseek-ocr-fine-tuning.ipynb`:
 ### 3. Phân tích kết quả
 
 ```bash
-cd src
 python analyze_results.py
 ```
 
@@ -148,22 +147,13 @@ result = model.infer(
 )
 ```
 
-## 📈 Evaluation Metrics
+## Evaluation Metrics
 
 - **CER (Character Error Rate)**: Tỷ lệ lỗi ký tự
 - **Perfect Match Rate**: Tỷ lệ mẫu nhận dạng chính xác 100%
 - **Insertion Rate**: Tỷ lệ lỗi chèn ký tự thừa
 - **Deletion Rate**: Tỷ lệ lỗi bỏ sót ký tự
 - **Substitution Rate**: Tỷ lệ lỗi thay thế ký tự sai
-
-## 📋 Phân tích Script (analyze_results.py)
-
-Script cung cấp:
-- `compute_edit_operations()`: Tính số lỗi Insertion/Deletion/Substitution bằng Levenshtein
-- `analyze_error_types()`: Phân tích chi tiết các loại lỗi
-- `calculate_perfect_match_rate()`: Tính tỷ lệ khớp hoàn hảo
-- `compare_models()`: So sánh hiệu năng 2 mô hình
-- `create_visualizations()`: Tạo biểu đồ phân tích
 
 ## Công nghệ sử dụng
 
@@ -174,7 +164,7 @@ Script cung cấp:
 - **Evaluation**: jiwer (WER/CER metrics)
 - **Visualization**: Matplotlib
 
-## 📚 Tài liệu tham khảo
+## Tài liệu tham khảo
 
 - [DeepSeek-OCR Paper](https://arxiv.org/abs/2410.05655)
 - [LoRA: Low-Rank Adaptation](https://arxiv.org/abs/2106.09685)
@@ -188,4 +178,5 @@ Script cung cấp:
 ## 📄 License
 
 MIT License
+
 
