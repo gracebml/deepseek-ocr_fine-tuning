@@ -1,19 +1,27 @@
 ---
-base_model: ./deepseek_ocr
+base_model: unsloth/DeepSeek-OCR
 library_name: peft
-pipeline_tag: text-generation
+pipeline_tag: image-to-text
+license: apache-2.0
+language:
+- vi
 tags:
-- base_model:adapter:./deepseek_ocr
+- base_model:adapter:unsloth/DeepSeek-OCR
 - lora
 - transformers
 - unsloth
+- ocr
+- vietnamese
+- handwriting-recognition
+datasets:
+- UIT-HWDB
 ---
 
-# Model Card for Model ID
+# DeepSeek-OCR Fine-tuned for Vietnamese Handwriting Recognition
 
 <!-- Provide a quick summary of what the model is/does. -->
 
-
+This is a LoRA adapter fine-tuned from **DeepSeek-OCR** for Vietnamese handwriting recognition (OCR) task using the **UIT-HWDB** dataset.
 
 ## Model Details
 
@@ -21,23 +29,21 @@ tags:
 
 <!-- Provide a longer summary of what this model is. -->
 
+This model is a LoRA (Low-Rank Adaptation) fine-tuned version of DeepSeek-OCR, specifically optimized for recognizing Vietnamese handwritten text including words, lines, and paragraphs.
 
+- **Developed by:** Grace
+- **Model type:** Vision-Language Model (VLM) with LoRA adapter
+- **Language(s):** Vietnamese
+- **License:** Apache-2.0
+- **Finetuned from model:** [unsloth/DeepSeek-OCR](https://huggingface.co/unsloth/DeepSeek-OCR)
 
-- **Developed by:** [More Information Needed]
-- **Funded by [optional]:** [More Information Needed]
-- **Shared by [optional]:** [More Information Needed]
-- **Model type:** [More Information Needed]
-- **Language(s) (NLP):** [More Information Needed]
-- **License:** [More Information Needed]
-- **Finetuned from model [optional]:** [More Information Needed]
-
-### Model Sources [optional]
+### Model Sources
 
 <!-- Provide the basic links for the model. -->
 
-- **Repository:** [More Information Needed]
-- **Paper [optional]:** [More Information Needed]
-- **Demo [optional]:** [More Information Needed]
+- **Repository:** [GitHub - deepseek-ocr_fine-tuning](https://github.com/gracebml/deepseek-ocr_fine-tuning)
+- **Base Model:** [DeepSeek-OCR](https://huggingface.co/unsloth/DeepSeek-OCR)
+- **Dataset:** [UIT-HWDB](https://www.kaggle.com/datasets/nvhieu/uit-hwdb-dataset)
 
 ## Uses
 
@@ -47,37 +53,77 @@ tags:
 
 <!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
 
-[More Information Needed]
+This model can be used directly for OCR tasks on Vietnamese handwritten documents, including:
+- Handwritten word recognition
+- Handwritten line recognition  
+- Handwritten paragraph recognition
 
-### Downstream Use [optional]
+### Downstream Use
 
 <!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
 
-[More Information Needed]
+- Document digitization systems
+- Handwriting-to-text applications
+- Educational tools for Vietnamese language learning
 
 ### Out-of-Scope Use
 
 <!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
 
-[More Information Needed]
+- Printed text OCR (use dedicated printed OCR models)
+- Non-Vietnamese handwriting recognition
+- Real-time video OCR
 
 ## Bias, Risks, and Limitations
 
 <!-- This section is meant to convey both technical and sociotechnical limitations. -->
 
-[More Information Needed]
+- Performance may vary depending on handwriting quality and style
+- Model was trained on UIT-HWDB dataset which may not cover all Vietnamese handwriting variations
+- Complex layouts or mixed content (text + diagrams) may not be handled well
 
 ### Recommendations
 
 <!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
 
-Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
+- Use clear, well-lit images for best results
+- Pre-process images to remove noise and enhance contrast
+- For production use, implement confidence thresholds and human review
 
 ## How to Get Started with the Model
 
 Use the code below to get started with the model.
 
-[More Information Needed]
+```python
+from unsloth import FastVisionModel
+from transformers import AutoModel
+from peft import PeftModel
+
+# Load base model
+model, tokenizer = FastVisionModel.from_pretrained(
+    "unsloth/DeepSeek-OCR",
+    load_in_4bit=True,
+    auto_model=AutoModel,
+    trust_remote_code=True,
+)
+
+# Load LoRA adapter
+model = PeftModel.from_pretrained(model, "path/to/checkpoint-534")
+
+# Set to inference mode
+FastVisionModel.for_inference(model)
+
+# Run inference
+result = model.infer(
+    tokenizer,
+    prompt="<image>\nFree OCR. ",
+    image_file="path/to/handwritten_image.jpg",
+    base_size=1024,
+    image_size=640,
+    crop_mode=True,
+)
+print(result)
+```
 
 ## Training Details
 
@@ -85,26 +131,42 @@ Use the code below to get started with the model.
 
 <!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
-[More Information Needed]
+**UIT-HWDB (Vietnamese Handwriting Database)**
+- `UIT_HWDB_word`: Single word images
+- `UIT_HWDB_line`: Line-level text images
+- `UIT_HWDB_paragraph`: Paragraph-level text images
+
+Total training samples: ~10,000+ images from multiple writers
 
 ### Training Procedure
 
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
 
-#### Preprocessing [optional]
+#### Preprocessing
 
-[More Information Needed]
-
+- Images converted to RGB format
+- Dynamic image sizing with base_size=1024, image_size=640
+- Crop mode enabled for better handling of varied aspect ratios
 
 #### Training Hyperparameters
 
-- **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
+- **Training regime:** QLoRA (4-bit quantization with LoRA)
+- **LoRA rank (r):** 16
+- **LoRA alpha:** 16
+- **LoRA dropout:** 0
+- **Bias:** none
+- **Target modules:** q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj
+- **Epochs:** 1
+- **Total steps:** 534
+- **Learning rate:** 1e-4 with cosine scheduler
 
-#### Speeds, Sizes, Times [optional]
+#### Speeds, Sizes, Times
 
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
 
-[More Information Needed]
+- **Training time:** ~30 minutes
+- **Adapter size:** ~297 MB
+- **GPU memory usage:** ~14 GB
 
 ## Evaluation
 
@@ -116,33 +178,30 @@ Use the code below to get started with the model.
 
 <!-- This should link to a Dataset Card if possible. -->
 
-[More Information Needed]
-
-#### Factors
-
-<!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
-
-[More Information Needed]
+200 samples from UIT-HWDB test set (evenly distributed across word, line, paragraph types)
 
 #### Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-[More Information Needed]
+- **CER (Character Error Rate):** Measures character-level accuracy
+- **Perfect Match Rate:** Percentage of samples with 0% CER
 
 ### Results
 
-[More Information Needed]
+| Metric | Baseline | Fine-tuned | Improvement |
+|--------|----------|------------|-------------|
+| Mean CER | ~40% | ~12% | **70% ↓** |
+| Median CER | ~33% | ~8% | **75% ↓** |
+| Perfect Match Rate | ~0% | ~25% | **+25%** |
 
-#### Summary
+#### Error Analysis
 
-
-
-## Model Examination [optional]
-
-<!-- Relevant interpretability work for the model goes here -->
-
-[More Information Needed]
+| Error Type | Baseline | Fine-tuned | Reduction |
+|------------|----------|------------|-----------|
+| Insertion | High | Low | ~70% |
+| Deletion | High | Low | ~65% |
+| Substitution | High | Low | ~72% |
 
 ## Environmental Impact
 
@@ -150,59 +209,60 @@ Use the code below to get started with the model.
 
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
 
-- **Hardware Type:** [More Information Needed]
-- **Hours used:** [More Information Needed]
-- **Cloud Provider:** [More Information Needed]
-- **Compute Region:** [More Information Needed]
-- **Carbon Emitted:** [More Information Needed]
+- **Hardware Type:** Tesla T4 GPU (x2)
+- **Hours used:** ~0.5 hours
+- **Cloud Provider:** Kaggle
+- **Compute Region:** Unknown
+- **Carbon Emitted:** Minimal (short training time)
 
-## Technical Specifications [optional]
+## Technical Specifications
 
 ### Model Architecture and Objective
 
-[More Information Needed]
+- **Architecture:** DeepSeek-OCR (Vision-Language Model based on DeepSeek-VL-v2)
+- **Objective:** Causal Language Modeling for image-to-text generation
+- **Adaptation:** LoRA applied to attention and MLP layers
 
 ### Compute Infrastructure
 
-[More Information Needed]
-
 #### Hardware
 
-[More Information Needed]
+- 2x Tesla T4 GPUs (15GB VRAM each)
+- Kaggle Notebooks environment
 
 #### Software
 
-[More Information Needed]
+- Python 3.10
+- Transformers 4.56.2
+- PEFT 0.16.0
+- Unsloth 2025.12.7
+- PyTorch 2.6.0+cu124
 
-## Citation [optional]
-
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
+## Citation
 
 **BibTeX:**
 
-[More Information Needed]
+```bibtex
+@misc{deepseek-ocr-vietnamese-hwdb,
+  author = {Grace},
+  title = {DeepSeek-OCR Fine-tuned for Vietnamese Handwriting Recognition},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/gracebml/deepseek-ocr_fine-tuning}
+}
+```
 
-**APA:**
+## Model Card Authors
 
-[More Information Needed]
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-[More Information Needed]
-
-## More Information [optional]
-
-[More Information Needed]
-
-## Model Card Authors [optional]
-
-[More Information Needed]
+Grace
 
 ## Model Card Contact
 
-[More Information Needed]
+GitHub: [@gracebml](https://github.com/gracebml)
+
 ### Framework versions
 
 - PEFT 0.16.0
+- Transformers 4.56.2
+- Unsloth 2025.12.7
+- PyTorch 2.6.0
