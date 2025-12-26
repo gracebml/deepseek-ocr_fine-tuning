@@ -136,7 +136,7 @@ print(result)
 - `UIT_HWDB_line`: Line-level text images
 - `UIT_HWDB_paragraph`: Paragraph-level text images
 
-Total training samples: ~10,000+ images from multiple writers
+Total training samples: ~8,000+ images from multiple writers, sample from this dataset.
 
 ### Training Procedure
 
