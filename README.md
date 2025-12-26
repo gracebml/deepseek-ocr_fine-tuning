@@ -1,18 +1,18 @@
 # DeepSeek-OCR Fine-tuning
 
-## 📖 Giới thiệu
+## Giới thiệu
 
 Đồ án fine-tuning mô hình **DeepSeek-OCR** cho tác vụ nhận dạng chữ viết tay tiếng Việt (Vietnamese Handwriting Recognition) sử dụng bộ dữ liệu **UIT-HWDB**.
 
 Mô hình được fine-tune bằng kỹ thuật **LoRA (Low-Rank Adaptation)** với thư viện **Unsloth** để tối ưu hóa hiệu năng training trên GPU hạn chế.
 
-## 🎯 Mục tiêu
+## Mục tiêu
 
 - Fine-tune mô hình DeepSeek-OCR trên dữ liệu chữ viết tay tiếng Việt
 - Đánh giá và so sánh hiệu năng giữa mô hình gốc (Baseline) và mô hình Fine-tuned
 - Phân tích chi tiết các loại lỗi OCR: Insertion, Deletion, Substitution
 
-## 📊 Kết quả
+## Kết quả
 
 ### Cải thiện CER (Character Error Rate)
 
@@ -48,7 +48,7 @@ src/
 └── README.md                              # File này
 ```
 
-## 🔧 Cấu hình Fine-tuning
+## Cấu hình Fine-tuning
 
 ### LoRA Configuration
 
@@ -77,7 +77,7 @@ target_modules = [
 - **Total Steps**: 534
 - **Hardware**: Tesla T4 GPU (2x)
 
-## 📦 Dataset
+## Dataset
 
 **UIT-HWDB** (Vietnamese Handwriting Database):
 - `UIT_HWDB_line`: Dữ liệu dòng chữ
@@ -188,3 +188,4 @@ Script cung cấp:
 ## 📄 License
 
 MIT License
+
