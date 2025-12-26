@@ -1,0 +1,34 @@
+# Windows Zone.Identifier files (NTFS alternate data streams)
+*Zone.Identifier
+*.Identifier
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Large model files (>100MB - GitHub limit)
+*.safetensors
+optimizer.pt
+rng_state.pth
+scaler.pt
+scheduler.pt
+
+# Temp files
+*.tmp
+temp_*
