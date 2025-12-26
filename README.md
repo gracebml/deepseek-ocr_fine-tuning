@@ -29,7 +29,7 @@ Mô hình được fine-tune bằng kỹ thuật **LoRA (Low-Rank Adaptation)** 
 ## 🗂️ Cấu trúc thư mục
 
 ```
-src/
+root/
 ├── kaggle_notebook/
 │   └── deepseek-ocr-fine-tuning.ipynb    # Notebook training trên Kaggle
 ├── results/
@@ -45,7 +45,7 @@ src/
 │           └── trainer_state.json         # Trạng thái training
 ├── visualizations/                        # Thư mục lưu biểu đồ phân tích
 ├── analyze_results.py                     # Script phân tích kết quả
-└── README.md                              # File này
+└── README.md                              
 ```
 
 ## Cấu hình Fine-tuning
@@ -90,17 +90,7 @@ target_modules = [
 
 ##  Hướng dẫn sử dụng
 
-### 1. Cài đặt Dependencies
-
-```bash
-pip install unsloth
-pip install transformers==4.56.2
-pip install trl==0.22.2
-pip install jiwer
-pip install einops addict easydict
-```
-
-### 2. Training trên Kaggle
+### 1. Training trên Kaggle
 
 Sử dụng notebook `kaggle_notebook/deepseek-ocr-fine-tuning.ipynb`:
 
@@ -109,7 +99,7 @@ Sử dụng notebook `kaggle_notebook/deepseek-ocr-fine-tuning.ipynb`:
 3. Bật GPU accelerator (Tesla T4)
 4. Chạy toàn bộ notebook
 
-### 3. Phân tích kết quả
+### 2. Phân tích kết quả
 
 ```bash
 python analyze_results.py
