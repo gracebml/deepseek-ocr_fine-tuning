@@ -164,7 +164,7 @@ Total training samples: ~10,000+ images from multiple writers
 
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
 
-- **Training time:** ~30 minutes
+- **Training time:** ~4.5 hours
 - **Adapter size:** ~297 MB
 - **GPU memory usage:** ~14 GB
 
